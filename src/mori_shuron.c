@@ -29,7 +29,7 @@ typedef long double ldouble;
 #define LIMIT_M 60
 
 /*ifdef: preset*/
-#if N/K==2 && N%K==0
+#if N==60 && K==30
 #define THEORY 0.0624
 #elif N==400 && K==370
 #define THEORY 0.0117
