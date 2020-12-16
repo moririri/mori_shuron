@@ -5,4 +5,5 @@ mori_shuron: ./src/mori_shuron.c
 
 solv: ./src/solv.c
 	gcc -o solv ./src/solv.c -std=c99 -lm
-
+clean:
+	rm -rf mori_shuron solv
