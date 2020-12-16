@@ -11,8 +11,8 @@
 #define XLEFT 0.01
 #define XRIGHT 0.4
 
-#define N 400
-#define K 370
+#define N 60
+#define K 20
 
 double f(double x);
 double bibun_f(double x);

@@ -23,12 +23,20 @@ typedef long double ldouble;
 #define L 50
 
 #define N 400
-#define M 30
+#define M 40
 #define K N-M
 
 #define LIMIT_M 60
 
-/*ifdef*/
+/*ifdef: preset*/
+#if N/K==2 && N%K==0
+#define THEORY 0.0624
+#elif N==400 && K==370
+#define THEORY 0.0117
+#elif N==60 && K==20
+#define THEORY 0.0936
+/*preet to add here*/
+#endif
 
 
 /*function defitions*/
@@ -120,8 +128,14 @@ void after_f(ulonglong *b, ulonglong MbitMax){
 
 /*function main*/
 int main(){
+        /*ifndef: preset is not defined*/
+        #ifndef THEORY
+            printf("-----preset is not defined !!-----\n");
+            printf("-----please run ./solv !!-----\n");
+            return EXIT_FAILURE;
+        #endif
 	
-	/*EXIT FAILURE*/
+	/*parameter check*/
 	if(M > LIMIT_M){
 		printf("-----M is too large.-----\n");
 		return EXIT_FAILURE;
