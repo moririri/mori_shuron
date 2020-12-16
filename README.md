@@ -16,7 +16,7 @@ Wynerの盗聴通信路符号化によれば、正規受信者と盗聴者が用
 
 
 # 提案アルゴリズム 
-![Test Image ](./img/mori_shuron.png)
+![Test Image ](./img/mori_shuron.PNG)
 
 ※BSCは反転確率αの二元対称通信路を表す。
 
