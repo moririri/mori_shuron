@@ -16,16 +16,91 @@ Wynerの盗聴通信路符号化によれば、正規受信者と盗聴者が用
 
 
 # 提案アルゴリズム 
+
 ![Test Image ](./img/mori_shuron.PNG)
 
 ※BSCは反転確率αの二元対称通信路を表す。
 
-## プログラム
+# プログラム
+
 提案アルゴリズムにて実装したプログラムをのせる。
+
+GCCのビルトイン関数を使用しているため、GCCでコンパイルすること。
+
+intel CPUだとNehalemマイクロアーキテクチャ以降を使用すること。AMDの場合は各自で調べること。
+
+https://en.wikipedia.org/wiki/SSE4#POPCNT_and_LZCNT
+
+
+``` ./src/mori_shuron.c 以下を編集
+/*check: user check data N, K, DUMP_NAME, H_DUMP_NAME, TIMES*/
+//==============================
+#define N 400  //check
+#define K 370 //check
+#define M N-K  
+
+/*name: ./result/N_K_result.log*/
+#define DUMP_NAME "./result/400_370_result.log" //check
+#define H_DUMP_NAME "./result/400_370_result_h.log" //check
+
+#define TIMES 5  //check
+//==============================
+```
+検査行列HがN×(N-K)行列
+M:=N-K
+
+DUMP_NAME: 提案アルゴリズムの実行結果をダンプするファイル名
+H_DUMP_NAME: 提案アルゴリズムの実行結果で選んだ検査行列Hをダンプするファイル名
+
+TIMES: ランダムコーディングを実行する回数、デフォルトだと5が設定
+
+**コンパイル**
+
 ```
 make
+```
+**プログラムの実行**
+
+```
 ./mori_shuron
 ```
+
+# プロット
+
+**resultディレクトリへ移動**
+
+```
+cd ./result
+```
+
+例えば、gnuplotだと以下のように実行すればよい。
+
+```
+plot "60_30_result.log" using 1:5 w l lw 5, "60_30_result.log" using 3:2 w l lw 5, "50_25_result.log" using 1:5 w l lw 5, "40_20_result.log" using 1:5 w l lw 5, "30_15_result.log" using 1:5 w l lw 5, "20_10_result.log" using 1:5 w l lw 5, "10_5_result.log" using 1:5 w l lw 5  
+```
+
+![Test Image ](./img/mori_shuron_demo.png)
+
+
+| N | K | K/N | 理論値 |
+
+| ---- | ---- | ---- | ---- |
+
+| 60 | 30 | 0.5 | 0.11 |
+
+| 50 | 25 | 0.5 | 0.11 |
+
+| 40 | 20 | 0.5 | 0.11 |
+
+| 30 | 15 | 0.5 | 0.11 |
+
+| 20 | 10 | 0.5 | 0.11 |
+
+| 10 | 5 | 0.5 | 0.11 |
+
+| 60 | 20 | 0.333 | 0.174 |
+
+| 400 | 370 | 0.925 | 0.009 |
 
 # コメント
 現在、数学のリハビリ中。

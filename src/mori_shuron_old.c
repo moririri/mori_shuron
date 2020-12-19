@@ -19,8 +19,8 @@ typedef long double ldouble;
 /*define*/
 #define L 50
 
-#define N 400
-#define M 40
+#define N 60
+#define M 30
 #define K N-M
 
 #define LIMIT_M 60
@@ -94,12 +94,13 @@ void after_f(ulonglong *b, ulonglong MbitMax){
 	ldouble width=0.5/L;
 	ldouble temp1=0.0, temp2=0.0, temp3=0.0, temp4=0.0;
 	
-	printf("a=%f, 2-norm=%.20Le, 1-norm=%.20Le\n"
+	printf("%f %.20Le %.20Le\n"
 	       ,0.0,sqrtl((ldouble)(MbitMax-1)/(ldouble)(MbitMax))
 	       ,sqrtl((ldouble)(MbitMax-1)));
 	
 	for(a=width ; a<0.5 ; a+=width){
 		temp4=0.0;
+		temp1=0.0;
 		for(int j=1 ; j<=N ; j++){
 			if(j==1){
 				temp3=2.0*logl(-2.0*a+1.0);
@@ -113,12 +114,12 @@ void after_f(ulonglong *b, ulonglong MbitMax){
 			}
 		}
 		//printf("a=%lf\n",a);
-		printf("a=%f, 2-norm=%.20Le, 1-norm=%.20Le\n"
-	       ,a,sqrtl((ldouble)(temp1))/sqrtl((ldouble)(MbitMax))
+		printf("%f %.20Le %.20Le\n"
+	       ,a,sqrtl((ldouble)(temp1)/(ldouble)(MbitMax))
 		   ,sqrtl((ldouble)(temp1)));
 	}
 	
-	printf("a=%f, 2-norm=%.20e, 1-norm=%.20e\n",a,0.0,0.0);
+	printf("%f %.20e %.20e\n",a,0.0,0.0);
 
 }
 

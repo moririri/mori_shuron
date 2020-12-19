@@ -13,6 +13,7 @@ This program is using gcc built in function. Compile to use gcc.
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
 //#include <gmp.h>
 #include "../headers/mt64.h"
 
@@ -22,45 +23,66 @@ typedef unsigned long long int ulonglong;
 typedef long double ldouble;
 
 /*define*/
-#define L 60
+/*check: user check data N, K, DUMP_NAME, H_DUMP_NAME, TIMES*/
+//==============================
+#define N 10  //check
+#define K 5 //check
+#define M N-K  
 
-#define N 60
-#define M 30
-#define K N-M
+/*name: ./result/N_K_result.log*/
+#define DUMP_NAME "./result/10_5_result.log" //check
+#define H_DUMP_NAME "./result/10_5_result_h.log" //check
+
+#define TIMES 5  //check
+//==============================
+
 #define LIMIT_M 60
 
-#define DUMP_NAME "../result/60_30_result.log"
-#define TIMES 2
+#define L 200
 
-/*ifdef: preset*/
+/*if: preset*/
 #if (N==80 && K==40) || (N==70 && K==35) || (N==60 && K==30) || (N==50 && K==25) || (N==40 && K==20) || (N==30 && K==15) || (N==20 && K==10) || (N==10 && K==5) 
-#define THEORY 0.0624
+#define THEORY 0.11
+
 #elif N==400 && K==370
-#define THEORY 0.0117
+#define THEORY 0.009
+
 #elif N==60 && K==20
-#define THEORY 0.0936
+#define THEORY 0.174
+
 /*preet to add here*/
 #endif
 
+/*ifndef: random or not random*/
+#ifndef ENABLE_RANDOM
+#define ENABLE_RANDOM 1
+#endif
+
+/*if: ENABLE_RANDOM*/
+#if defined(ENABLE_RANDOM) && ENABLE_RANDOM==0
+#undef TIMES
+#define TIMES 1
+#endif
 
 /*function defitions*/
-ulonglong popcnt(ulonglong x);
-ulonglong parity(ulonglong x);
+int popcnt(ulonglong x);
+int parity(ulonglong x);
 void genrand(ulonglong *h, ulonglong MbitMax);
 ulonglong beki();
 void before_f(ulonglong *h, ulonglong *b, ulonglong MbitMax);
 double bound_theory_f(double x, double y, double z);
-void exchange_f(ldouble *a, ldouble *b, int c);
+void exchange_f(ldouble *a, ldouble *b, int c, ulonglong *h1, ulonglong *h2, int norm);
+void copy_f(ldouble *a, ldouble *b, ulonglong *c, ulonglong *d, int mode);
 void after_f(ulonglong *b, ulonglong MbitMax, ldouble *Result2Norm, ldouble *Result1Norm, int *ind_theory, double *alpha);
 
 /*function popcnt*/
-ulonglong popcnt(ulonglong x){
-	return (ulonglong)(__builtin_popcountll(x));	
+int popcnt(ulonglong x){
+	return (__builtin_popcountll(x));	
 }
 
 /*function parity*/
-ulonglong parity(ulonglong x){
-	return (ulonglong)(__builtin_parityll(x));	
+int parity(ulonglong x){
+	return (__builtin_parityll(x));	
 }
 
 /*function genrand*/
@@ -71,8 +93,8 @@ void genrand(ulonglong *h, ulonglong MbitMax){
 		if(i<M){
 			h[i]=(ulonglong)((i==0)?1:h[i-1]*2);
 		}else{
-	        //printf("%lld\n",genrand64_int64()%10);
-		    h[i]=genrand64_int64()%MbitMax;
+	            //printf("%lld\n",genrand64_int64()%10);
+		    h[i]=(ENABLE_RANDOM==1)?genrand64_int64()%MbitMax:0;
 		}
 	}
 }
@@ -106,8 +128,9 @@ double bound_theory_f(double x, double y, double z){
 }
 
 /*function exchange_f: select min(a, b), return *a*/
-void exchange_f(ldouble *a, ldouble *b, int c){
+void exchange_f(ldouble *a, ldouble *b, int c, ulonglong *h1, ulonglong *h2, int norm){
     ldouble temp=0.0;
+    ulonglong h_temp=0;
     if(a[c] > b[c]){
         for(int i=0 ; i<=L ; i++){
             temp=a[i];
@@ -115,14 +138,27 @@ void exchange_f(ldouble *a, ldouble *b, int c){
 	    b[i]=temp;
 
         }
+	if(norm==1){
+	    /*a: h1, b: h2*/
+	    for(int i=0 ; i<N ; i++){
+                h_temp=h1[i];
+	        h1[i]=h2[i];
+	        h2[i]=h_temp;
+	    }
+	}
     }
 }
 
 
 /*function copy_f*/
-void copy_f(ldouble *a, ldouble *b){
+void copy_f(ldouble *a, ldouble *b, ulonglong *c, ulonglong *d, int mode){
     for(int i=0 ; i<=L ; i++){
         a[i]=b[i];
+    }
+    if(mode==1){
+        for(int i=0 ; i<N ; i++){
+            c[i]=d[i];
+        }
     }
 }
 
@@ -145,6 +181,7 @@ void after_f(ulonglong *b, ulonglong MbitMax, ldouble *Result2Norm, ldouble *Res
 	
 	for(a=width ; a<0.5 ; a+=width){
 		temp4=0.0;
+		temp1=0.0;
 		if(a<=theory && a+width>theory){
                     v=bound_theory_f(a, a+width, theory);
 		    *ind_theory=(int)(v/width);
@@ -168,7 +205,7 @@ void after_f(ulonglong *b, ulonglong MbitMax, ldouble *Result2Norm, ldouble *Res
 	       ,sqrtl((ldouble)(temp1)));
 		*/
                 i++;
-		Result2Norm[i]=sqrtl((ldouble)(temp1))/sqrtl((ldouble)(MbitMax));
+		Result2Norm[i]=sqrtl((ldouble)(temp1)/(ldouble)(MbitMax));
 		Result1Norm[i]=sqrtl((ldouble)(temp1));
 		alpha[i]=a;
 	}
@@ -214,22 +251,43 @@ int main(){
 	
 	ulonglong h[N]={0}, b[N+1]={0};
 	ulonglong MbitMax=beki();
+	ulonglong hdata1[N]={0.0};
+
 	int ind_theory=0;
 
 	ldouble Result2Norm[L+1]={0.0}, Result1Norm[L+1]={0.0};
-	ldouble Result1Norm_data1[L+1]={0.0}, Result1Norm_data2[L+1]={0.0};
+	ldouble Result2Norm_data1[L+1]={0.0}, Result1Norm_data1[L+1]={0.0};
+
 
 	double a[L+1]={0.0};
-	FILE *outputfile;
+	FILE *outputfile, *hdata_outputfile;
 
 	#ifdef DUMP_NAME
 	    outputfile = fopen(DUMP_NAME, "w"); 
 	    if (outputfile == NULL) { 
-	        printf("-----cannot open-----\n");         
+	        printf("-----DUMP_NAME: can not open-----\n");         
                 return EXIT_FAILURE;                       
             }else{
-                printf("-----file pointer is ok !!-----\n");
+                printf("-----DUMP_NAME: file pointer is ok !!-----\n");
 	    }
+        #endif
+	#ifndef DUMP_NAME
+	    printf("-----DUMP_NAME: not defined-----\n");
+	    return EXIT_FAILURE;
+        #endif
+
+	#ifdef H_DUMP_NAME
+	    hdata_outputfile = fopen(H_DUMP_NAME, "w"); 
+	    if (hdata_outputfile == NULL) { 
+	        printf("-----H_DUMP_NAME: can not open-----\n");         
+                return EXIT_FAILURE;                       
+            }else{
+                printf("-----H_DUMP_NAME: file pointer is ok !!-----\n");
+	    }
+        #endif
+	#ifndef H_DUMP_NAME
+	    printf("-----H_DUMP_NAME: not defined ----\n");
+	    return EXIT_FAILURE;
         #endif
 
 	//printf("%llu\n",MbitMax);
@@ -278,11 +336,14 @@ int main(){
 
 
 	     if(t == 0){
-	        copy_f(Result1Norm_data1, Result1Norm);
+	        copy_f(Result1Norm_data1, Result1Norm, hdata1, h, 1);
+	        copy_f(Result2Norm_data1, Result2Norm, hdata1, h, 0);
+		//copy_f(hdata1, h);
 
 	     }
 	     if(t >= 1){
-                 exchange_f(Result1Norm_data1, Result1Norm, ind_theory);
+                 exchange_f(Result1Norm_data1, Result1Norm, ind_theory, hdata1, h, 1);
+                 exchange_f(Result2Norm_data1, Result2Norm, ind_theory, hdata1, h, 2);
 	     }
 	     printf("\n");
 	}
@@ -291,12 +352,33 @@ int main(){
 	     /*dump data*/
 	     printf("-----start data dump-----\n");
 	     for(int i=0 ; i<=L ; i++){
-	         fprintf(outputfile, "%f, %f, %.23LE, %.23LE \n",a[i],THEORY,Result2Norm[i],Result1Norm[i]); 
+	         fprintf(outputfile, "%f %f %f %f %.23LE %.23LE \n"
+				 ,a[i],2.0*a[i],THEORY,(double)(MbitMax*THEORY)
+				 ,Result2Norm_data1[i],Result1Norm_data1[i]); 
+	         //fprintf(outputfile, "%f %f %.23LE %.23LE \n",a[i],THEORY,Result2Norm_data1[i],Result1Norm_data1[i]); 
 	     }
 	     printf("-----end data dump-----\n");
 
+	     printf("-----start H=[I, H2] dump-----\n");
+	     
+	     fprintf(hdata_outputfile, "-----This is H=[I, H2], N=%d, M=%d, K=%d, H: M x N .-----\n",N,M,K); 
+	     for(int i=0 ; i<N ; i++){
+		 if(i==0){
+	             fprintf(hdata_outputfile, "[%lld, ",hdata1[i]); 
+
+		 }else if(i==N-1){
+	             fprintf(hdata_outputfile, "%lld]\n",hdata1[i]); 
+
+		 }else{
+	             fprintf(hdata_outputfile, "%lld, ",hdata1[i]);
+
+		 }
+	     }
+	     printf("-----end H=[I, H2] dump-----\n");
+
              /*close file*/
 	     fclose(outputfile);
+	     fclose(hdata_outputfile);
 	
 	     printf("-----success to run !!!-----\n");
              return EXIT_SUCCESS;
