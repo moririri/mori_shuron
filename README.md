@@ -83,27 +83,20 @@ plot "60_30_result.log" using 1:5 w l lw 5, "60_30_result.log" using 3:2 w l lw 
 
 
 | N | K | K/N | 理論値 |
-
 | ---- | ---- | ---- | ---- |
-
 | 60 | 30 | 0.5 | 0.11 |
-
 | 50 | 25 | 0.5 | 0.11 |
-
 | 40 | 20 | 0.5 | 0.11 |
-
 | 30 | 15 | 0.5 | 0.11 |
-
 | 20 | 10 | 0.5 | 0.11 |
-
 | 10 | 5 | 0.5 | 0.11 |
-
 | 60 | 20 | 0.333 | 0.174 |
-
 | 400 | 370 | 0.925 | 0.009 |
 
 # コメント
+
 現在、数学のリハビリ中。
 
 # 参考文献
+
 https://uec.repo.nii.ac.jp/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=8712&item_no=1&page_id=13&block_id=21
