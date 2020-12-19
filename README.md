@@ -100,6 +100,14 @@ plot "60_30_result.log" using 1:5 w l lw 5, "60_30_result.log" using 3:2 w l lw 
 | 60 | 20 | 0.333 | 0.174 |
 | 400 | 370 | 0.925 | 0.009 |
 
+水色のデータ：理論値
+
+緑色のデータ：K/N
+
+紫色のデータ：1-h(α)
+
+ただし、h()は二値エントロピー関数とする。
+
 N=60, K=30
 
 ![Test Image ](./img/60_30_plot_theory.png)
@@ -127,8 +135,6 @@ N=400, K=370
 
 /*preet to add here*/
 #endif
-
-```
 
 # コメント
 
