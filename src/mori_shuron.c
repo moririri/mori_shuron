@@ -25,13 +25,13 @@ typedef long double ldouble;
 /*define*/
 /*check: user check data N, K, DUMP_NAME, H_DUMP_NAME, TIMES*/
 //==============================
-#define N 10  //check
-#define K 5 //check
+#define N 400  //check
+#define K 370 //check
 #define M N-K  
 
 /*name: ./result/N_K_result.log*/
-#define DUMP_NAME "./result/10_5_result.log" //check
-#define H_DUMP_NAME "./result/10_5_result_h.log" //check
+#define DUMP_NAME "./result/400_370_result.log" //check
+#define H_DUMP_NAME "./result/400_370_result_h.log" //check
 
 #define TIMES 5  //check
 //==============================

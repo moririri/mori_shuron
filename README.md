@@ -47,10 +47,16 @@ https://en.wikipedia.org/wiki/SSE4#POPCNT_and_LZCNT
 //==============================
 ```
 検査行列HがN×(N-K)行列
+
 M:=N-K
 
-DUMP_NAME: 提案アルゴリズムの実行結果をダンプするファイル名
+DUMP_NAME: 提案アルゴリズムの実行結果をダンプするファイル名 
+
+命名規則：./result/[N]_[K]_result.log
+
 H_DUMP_NAME: 提案アルゴリズムの実行結果で選んだ検査行列Hをダンプするファイル名
+
+命名規則： ./result/[N]_[K]_result_h.log
 
 TIMES: ランダムコーディングを実行する回数、デフォルトだと5が設定
 
@@ -81,6 +87,7 @@ plot "60_30_result.log" using 1:5 w l lw 5, "60_30_result.log" using 3:2 w l lw 
 
 ![Test Image ](./img/mori_shuron_demo.png)
 
+# プレセットデータ
 
 | N | K | K/N | 理論値 |
 | ---- | ---- | ---- | ---- |
@@ -92,6 +99,36 @@ plot "60_30_result.log" using 1:5 w l lw 5, "60_30_result.log" using 3:2 w l lw 
 | 10 | 5 | 0.5 | 0.11 |
 | 60 | 20 | 0.333 | 0.174 |
 | 400 | 370 | 0.925 | 0.009 |
+
+N=60, K=30
+
+![Test Image ](./img/60_30_plot_theory.png)
+
+N=60, K=20
+
+![Test Image ](./img/60_20_plot_theory.png)
+
+N=400, K=370
+
+![Test Image ](./img/400_370_plot_theory.png)
+
+自分でデータを追加する場合はこれらのデータを自分で用意する必要がある。
+
+``` ./src/mori_shuron.c
+/*if: preset*/
+#if (N==80 && K==40) || (N==70 && K==35) || (N==60 && K==30) || (N==50 && K==25) || (N==40 && K==20) || (N==30 && K==15) || (N==20 && K==10) || (N==10 && K==5) 
+#define THEORY 0.11
+
+#elif N==400 && K==370
+#define THEORY 0.009
+
+#elif N==60 && K==20
+#define THEORY 0.174
+
+/*preet to add here*/
+#endif
+
+```
 
 # コメント
 
