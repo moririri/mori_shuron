@@ -3,6 +3,10 @@
 #include <math.h>
 
 /*define*/
+//MODE 1: nibun, MODE 0: newton
+#define MODE 1 //check
+
+
 //newton
 #define EP pow(10, -5)
 #define INIT 0.01
@@ -20,20 +24,19 @@
 double f(double x);
 double bibun_f(double x);
 double newton_sub_f(double x);
-void newton_f(double x);
+void newton_f(double x, double *solv);
 void nibun_f(double x_start1, double x_start2, double *solv);
 double ent(double x);
 
 double f(double x){
     //double y=pow(x, 2)-3;
-	double n=(double)N, k=(double)K, y=1.0-ent(x)-(k/n);
+    double n=(double)N, k=(double)K, y=1.0-ent(x)-(k/n);
     return y;
 }
 
 double bibun_f(double x){
     //double y=2*x;
-	//double y=(-log(x)+1.0)/log(2.0);
-	double y=0.0;
+    double y=(log(x)-log(1.0-x))/log(2.0);
     return y;
 }
 
@@ -41,7 +44,7 @@ double newton_sub_f(double x){
     return x-(f(x)/bibun_f(x));
 }
 
-void newton_f(double x){
+void newton_f(double x, double *solv){
     double x1=x;
     double x2=newton_sub_f(x1);
     int cnt=1;
@@ -53,6 +56,7 @@ void newton_f(double x){
     }
     
    printf("newton: cnt=%d, solv=%.10lf\n",cnt,x2);
+   *solv=x2;
 
 /*
    for(int i=0 ; i<20 ; i++){
@@ -60,6 +64,7 @@ void newton_f(double x){
        x=x1;
        printf("x1=%lf\n",x1);
    }
+   *solv=x1;
 */
 }
 
@@ -73,24 +78,22 @@ void nibun_f(double x_start1, double x_start2, double *solv){
   printf("f(%lf)=%lf\n",a,f(a));
   printf("f(%lf)=%lf\n",b,f(b));
 	
-	
-  while(f(a)*f(b) < 0.0){
+  while(fabs(a-b) > ep){
   	  cnt++;
-  	  printf("nibun: cnt=%d\n",cnt);
-      c = (a+b)/2.0;
+          c = (a+b)/2.0;
   	  fc = f(c);
-      if(fc > 0.0){
-        b = c;
-      }
-      else{
-        a = c;
-      }
-  	  if(fabs(fc) < ep){
-            printf("nibun: fabs=%lf\n",fc);
-  	  	    break;
-      }
-  	  //printf("nibun: c=%lf\n",c);
+	  if(fc == 0.0){
+              break;
+	  }
+	  if(f(a)*fc < 0.0){
+              b=c;
+	  }
+	  if(f(a)*fc > 0.0){
+              a=c;
+	  }
+  	  //printf("nibun: %lf\n",c);
   }
+	
 
   printf("nibun: cnt=%d, solv=%.10lf\n",cnt,c);
   *solv=c;
@@ -121,7 +124,8 @@ int main(){
 	    printf("-----cannot open-----\n");
 	    return EXIT_FAILURE;
         }
-	
+
+        #if MODE == 1
 	for(int i=1 ; i<=n ; i++){
 		temp1=i*l;
 		//printf("x=%lf\n",temp1);
@@ -151,6 +155,12 @@ int main(){
 	}else{
 		printf("nibun is failed!!\n");
 	}
+        #endif
+
+        #if MODE==0
+	newton_f(0.0001, &solv);
+        #endif
+
         printf("-----plot dump start-----\n");
         for(double x=length ; x<1.0 ; x+=length){
             //printf("%f %f %f %f\n",x,1.0-ent(x),v,solv);
@@ -158,8 +168,8 @@ int main(){
             fprintf(outputfile,"%f %f %f %f\n",x,1.0-ent(x),v,solv);
         }
         printf("-----plot dump end-----\n");
-	    printf("f(%lf)=%lf\n",solv,f(solv));
-	    //printf("f(%lf)=%lf\n",0.11,f(0.11));
+	printf("f(%lf)=%lf\n",solv,f(solv));
+	//printf("f(%lf)=%lf\n",0.11,f(0.11));
 
 	fclose(outputfile);
 	

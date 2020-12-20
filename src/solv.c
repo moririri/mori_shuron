@@ -3,6 +3,10 @@
 #include <math.h>
 
 /*define*/
+
+//MODE 1: nibun, MODE 0: newton
+#define MODE 1
+
 //newton
 #define EP pow(10, -5)
 #define INIT 0.01
@@ -12,7 +16,7 @@
 #define XRIGHT 0.4
 
 #define N 60
-#define K 20
+#define K 30
 
 double f(double x);
 double bibun_f(double x);
@@ -29,8 +33,8 @@ double f(double x){
 
 double bibun_f(double x){
     //double y=2*x;
-	//double y=(-log(x)+1.0)/log(2.0);
-	double y=0.0;
+    double y=(log(x)-log(1.0-x))/log(2.0);
+    //double y=0.0;
     return y;
 }
 
@@ -70,19 +74,19 @@ void nibun_f(double x_start1, double x_start2){
   printf("f(%lf)=%lf\n",b,f(b));
 	
 	
-  while(f(a)*f(b) < 0.0){
+  while(fabs(a-b) > EP){
   	  cnt++;
-      c = (a+b)/2.0;
+          c = (a+b)/2.0;
   	  fc = f(c);
-      if(fc > 0.0){
-        b = c;
-      }
-      else{
-        a = c;
-      }
-  	  if(fabs(fc) < EP){
-  	  	break;
-      }
+	  if(fc == 0.0){
+              break;
+	  }
+	  if(f(a)*fc < 0.0){
+              b=c;
+	  }
+	  if(f(a)*fc > 0.0){
+              a=c;
+	  }
   	  //printf("nibun: %lf\n",c);
   }
 
@@ -95,14 +99,14 @@ double ent(double x){
 }
 
 int main(){
-    //newton_f(INIT);
+        //newton_f(INIT);
 
 	//nibun_f(XLEFT, XRIGHT);
 	int n=50, flag=0;
 	double l=1.0*(XRIGHT-XLEFT)/n;
 	double temp1=0.0, temp2=0.0, temp3=0.0;
 	
-	
+        #if MODE == 1	
 	for(int i=1 ; i<=n ; i++){
 		temp1=i*l;
 		//printf("x=%lf\n",temp1);
@@ -132,7 +136,11 @@ int main(){
 	}else{
 		printf("nibun is failed!!\n");
 	}
-	
+        #endif
+
+        #if MODE == 0
+	newton_f(0.0001);
+        #endif
 	
     return 0;
 }
