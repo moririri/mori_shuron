@@ -4,7 +4,7 @@ This program is based on a reproduction experiment of the following research.
 
 https://uec.repo.nii.ac.jp/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=8712&item_no=1&page_id=13&block_id=21
 
-This program is using gcc built in function. Compile to use gcc.
+This program is using gcc (clang) built in function. Compile to use gcc or clang.
 
 */
 

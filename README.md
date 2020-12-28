@@ -141,6 +141,16 @@ N=400, K=370
 
 現在、数学のリハビリ中。
 
+20201228
+
+ビルトイン関数はgccとclangで同じ構文のものが使用できるらしいので、
+
+Makefileを修正して、clangのversionも追記して(n,k)=(400, 370)で実行してみたところ、
+
+clangの方が7分程、gccが20分程で計算が終わった。
+
+この違いはなんだろうか。。
+
 # 参考文献
 
 https://uec.repo.nii.ac.jp/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=8712&item_no=1&page_id=13&block_id=21
