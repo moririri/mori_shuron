@@ -151,6 +151,8 @@ clangの方が7分程、gccが20分程で計算が終わった。
 
 この違いはなんだろうか。。
 
+インテルコンパイラ欲しい。
+
 # 参考文献
 
 https://uec.repo.nii.ac.jp/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=8712&item_no=1&page_id=13&block_id=21

@@ -25,10 +25,7 @@ solv: ./src/solv.c
 plot_check: ./src/plot_check.c
 	$(GCC) -o plot_check ./src/plot_check.c -std=c99 -lm
 
-sample_str: ./test/sample_str.c
-	$(GCC) -o sample_str ./test/sample_str.c
-
 clean:
-	$(RM) -rf mori_shuron mori_shuron_clang mori_shuron_not_random mori_shuron_normal solv plot_check mori_shuron_old sample_str
+	$(RM) -rf mori_shuron mori_shuron_clang mori_shuron_not_random mori_shuron_normal solv plot_check mori_shuron_old
 
 
