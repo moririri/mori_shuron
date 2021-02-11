@@ -50,7 +50,7 @@ typedef long double ldouble;
 #elif N==60 && K==20
 #define THEORY 0.174
 
-/*preet to add here*/
+/*preset to add here*/
 #endif
 
 /*ifndef: random or not random*/
