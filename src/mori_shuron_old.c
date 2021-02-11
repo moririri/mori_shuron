@@ -32,7 +32,7 @@ typedef long double ldouble;
 #define THEORY 0.0117
 #elif N==60 && K==20
 #define THEORY 0.0936
-/*preet to add here*/
+/*preset to add here*/
 #endif
 
 
